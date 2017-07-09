@@ -13,7 +13,6 @@ class g13(object):
         self.dev.set_configuration()
         self.claimInterface(self.dev, self.interface)
         self.endpoint = self.dev[0][(0,0)][0]
-        self.listenfordata(self.dev,self.endpoint)
 
     def getDevice(self, vendorid, prodid):
         # find our device
@@ -58,3 +57,4 @@ class g13(object):
 #array('B', [1, 134, 130, 1, 0, 128, 0, 128])
 if __name__ == "__main__":
     g = g13()
+    g.listenfordata(g.dev,g.endpoint)
