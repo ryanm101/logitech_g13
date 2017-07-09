@@ -32,6 +32,11 @@ class g13(object):
     def claimInterface(self, dev, interface):
         usb.util.claim_interface(dev, interface)
 
+    def isLCDLightOn(self,byte):
+        if long(hex(byte),16) & 0x80:
+            return True
+        return False
+
     def listenfordata(self,dev,endpoint):
         while(1):
             try:
@@ -49,7 +54,7 @@ class g13(object):
         dev.attach_kernel_driver(interface)
 
 # byte 0 always =1
-# bytes 1,2 Joystick control
+# bytes 1,2 Joystick control (x,y) coordinates
 # bytes 3,4,5 are GKeys
 # byte 5 msb, 128 = LCD Light on, 0 = LCD Light off
 # byte 6 LCD Control Keys & M1-3
