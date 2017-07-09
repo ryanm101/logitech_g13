@@ -1,0 +1,5 @@
+*.pcapng
+*.ko
+*.pyc
+*.o
+*.cmd
