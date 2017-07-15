@@ -47,16 +47,22 @@ class g13(object):
     def claimInterface(self, dev, interface):
         usb.util.claim_interface(dev, interface)
 
-    def getLCDKeys(self,byte):
+    def getLCDMKeys(self,bytelst):
         matches = list()
-        binary = long(hex(byte),16)
-        for k in self.maskdic.keys():
-            mask = long(hex(int(k)),16)
-            if binary & mask != 0:
-                if int(k) > 31:
-                    continue
-                _str = "LCDK{}".format(self.maskdic[k])
-                matches.append(_str)
+        for idx,byte in enumerate(bytelst):
+            binary = long(hex(byte),16)
+            for k in self.maskdic.keys():
+                mask = long(hex(int(k)),16)
+                if binary & mask != 0:
+                    if idx == 0 and int(k) < 32:
+                        _str = "LCDK{}".format(self.maskdic[k])
+                    elif idx == 0 and int(k) >= 32:
+                        _str = "MK{}".format(self.maskdic[k] -5)
+                    elif idx == 1 and int(k) == 1:
+                        _str = "MK4"
+                    else:
+                        continue
+                    matches.append(_str)
         return matches
 
     def getGKeys(self, bytelst):
@@ -83,7 +89,7 @@ class g13(object):
             try:
                 data = dev.read(endpoint.bEndpointAddress,endpoint.wMaxPacketSize)
                 #print data
-                print "[{0},{2},{4},{6},{8},{10},{12},{14}]::::[{1},{3},{5},{7},{9},{11},{13}]".format(
+                print "[{0},{2},{4},{6},{8},{10},{12},{14}]::::[{1},{3},{5},{7},{9},{11},{13},{15}]".format(
                         hex(data[0]),data[0],
                         hex(data[1]),data[1],
                         hex(data[2]),data[2],

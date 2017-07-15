@@ -9,7 +9,7 @@ import g13
 class g13Test(unittest.TestCase):
     def setUp(self):
         self.g = g13.g13()
-        self.gk, self.lcdk = self.KeysLists()
+        self.gk, self.lcdmk = self.KeysLists()
 
     def tearDown(self):
         self.g.cleanup()
@@ -39,14 +39,18 @@ class g13Test(unittest.TestCase):
             "G21": [0,0,16],
             "G22": [0,0,32]
         }
-        _LCDKeyList = {
-            "LCDK1": 1, # Selector
-            "LCDK2": 2,
-            "LCDK3": 4,
-            "LCDK4": 8,
-            "LCDK5": 16
+        _LCD_M_KeyList = {
+            "LCDK1": [1,0], # Selector
+            "LCDK2": [2,0],
+            "LCDK3": [4,0],
+            "LCDK4": [8,0],
+            "LCDK5": [16, 0],
+            "MK1": [32, 0],
+            "MK2": [64, 0],
+            "MK3": [128, 0],
+            "MK4": [0, 1] #Macro Record
         }
-        return _GkeyList, _LCDKeyList
+        return _GkeyList, _LCD_M_KeyList
 
     # Check Methods
     def test_getGKeys_G1_22(self):
@@ -74,12 +78,19 @@ class g13Test(unittest.TestCase):
         self.assertEqual(len(res), 1)
         self.assertEqual(res[0], "G1")
 
-    def test_getLCDKeys_LCDK1_5(self):
+    def test_getLCDMKeys_LCDK1_5(self):
         for i in range(1,5):
             _keystr = "LCDK{}".format(i)
-            res = self.g.getLCDKeys(self.lcdk[_keystr])
+            res = self.g.getLCDMKeys(self.lcdmk[_keystr])
             self.assertEqual(len(res), 1)
             self.assertEqual(res[0], _keystr)
+
+    def test_getLCDMKeys_MK1_4(self):
+        for i in range(1,4):
+            _keystr = "MK{}".format(i)
+            res = self.g.getLCDMKeys(self.lcdmk[_keystr])
+            self.assertEqual(res[0], _keystr)
+            self.assertEqual(len(res), 1)
 
     def test_getDevice_Raise(self):
         with self.assertRaises(ValueError):
